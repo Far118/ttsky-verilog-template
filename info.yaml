@@ -1,56 +1,42 @@
-# Tiny Tapeout project information
 project:
-  title:        ""      # Project title
-  author:       ""      # Your name
-  discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  ""      # One line description of what your project does
-  language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
-  clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
+  title:        "Qwen INT4 Systolic PE Array Demo"
+  author:       "Alexander Manko"
+  discord:      ""
+  description:  "Demo weight-stationary systolic array (4x8, INT4 weights x INT8 activations) - prototype compute core for a pipeline of inference chips targeting Qwen3"
+  language:     "Verilog"
+  clock_hz:     10000000
 
-  # How many tiles your design occupies? A single tile is about 167x108 uM.
-  tiles: "1x1"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
+  top_module:  "tt_um_qwen_pe_array"
 
-  # Your top module name must start with "tt_um_". Make it unique by including your github username:
-  top_module:  "tt_um_example"
-
-  # List your project's source files here.
-  # Source files must be in ./src and you must list each source file separately, one per line.
-  # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
   source_files:
-    - "project.v"
+    - "pe_int4x8.v"
+    - "systolic_array.v"
+    - "tt_um_qwen_pe_array.v"
 
-# The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
-# This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
+  tiles: "2x1"
+
 pinout:
-  # Inputs
-  ui[0]: ""
-  ui[1]: ""
-  ui[2]: ""
-  ui[3]: ""
-  ui[4]: ""
-  ui[5]: ""
-  ui[6]: ""
-  ui[7]: ""
-
-  # Outputs
-  uo[0]: ""
-  uo[1]: ""
-  uo[2]: ""
-  uo[3]: ""
-  uo[4]: ""
-  uo[5]: ""
-  uo[6]: ""
-  uo[7]: ""
-
-  # Bidirectional pins
-  uio[0]: ""
-  uio[1]: ""
-  uio[2]: ""
-  uio[3]: ""
-  uio[4]: ""
-  uio[5]: ""
-  uio[6]: ""
-  uio[7]: ""
-
-# Do not change!
-yaml_version: 6
+  ui[0]: "mode/data bit0"
+  ui[1]: "mode/data bit1"
+  ui[2]: "data bit2"
+  ui[3]: "data bit3 / weight int4 lsb"
+  ui[4]: "data bit4 / col_addr0"
+  ui[5]: "data bit5 / col_addr1"
+  ui[6]: "mode_select bit0"
+  ui[7]: "mode_select bit1"
+  uo[0]: "result byte bit0"
+  uo[1]: "result byte bit1"
+  uo[2]: "result byte bit2"
+  uo[3]: "result byte bit3"
+  uo[4]: "result byte bit4"
+  uo[5]: "result byte bit5"
+  uo[6]: "result byte bit6"
+  uo[7]: "result byte bit7"
+  uio[0]: "result_valid flag"
+  uio[1]: "unused"
+  uio[2]: "unused"
+  uio[3]: "unused"
+  uio[4]: "row_addr bit0"
+  uio[5]: "row_addr bit1"
+  uio[6]: "row_addr bit2"
+  uio[7]: "row_addr bit3"
