@@ -32,7 +32,7 @@ module tt_um_qwen_pe_array (
     wire                   act_last = ui_in[7:6] == 2'b10;
 
     wire                        result_valid;
-    wire signed [ACC_WIDTH-1:0] result [0:N-1];
+    wire signed [N*ACC_WIDTH-1:0] result;
 
     systolic_array #(.N(N), .K(K), .ACC_WIDTH(ACC_WIDTH)) core (
         .clk(clk), .rst_n(rst_n),
@@ -56,7 +56,7 @@ module tt_um_qwen_pe_array (
             out_col <= (out_col == N-1) ? 0 : out_col + 1'b1;
     end
 
-    assign uo_out = result_valid ? result[out_col][ACC_WIDTH-1 -: 8] : 8'h00;
+    assign uo_out = result_valid ? result[out_col*ACC_WIDTH + (ACC_WIDTH-8) +: 8] : 8'h00;
     assign uio_out = {7'b0, result_valid};
     assign uio_oe  = 8'b0000_0001;
 
